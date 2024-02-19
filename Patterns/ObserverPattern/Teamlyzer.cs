@@ -1,0 +1,39 @@
+using Patterns.ObserverPattern.Interfaces;
+
+namespace Patterns.ObserverPattern;
+
+public class Teamlyzer : ISubject
+{
+    // public Teamlyzer(string notice)
+    // {
+    //     Notice = notice;
+    // }
+
+    private readonly List<IObserver> observers = new();
+    private string notice;
+
+    public string Notice
+    {
+        get => notice;
+        set 
+        {
+            notice = value;
+            Notify();
+        }
+}
+    
+    public void Attach(IObserver observer)
+    {
+        observers.Add(observer);
+    }
+
+    public void Detach(IObserver observer)
+    {
+        observers.Remove(observer);
+    }
+
+    public void Notify()
+    {
+        observers.ForEach(x => { x.Update(this); });
+    }
+}

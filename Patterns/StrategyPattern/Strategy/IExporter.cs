@@ -1,4 +1,4 @@
-﻿namespace StrategyPattern;
+﻿namespace Patterns.StrategyPattern.Strategy;
 
 public interface IExporter
 {
