@@ -3,131 +3,168 @@
 using System.Diagnostics.Tracing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Patterns.BuilderPattern;
 using Patterns.Configuration;
 using Patterns.ObserverPattern;
 using Patterns.StrategyPattern;
 
 using var host = Host.CreateDefaultBuilder(args).ConfigureServices((_, services) => { services.AddServices(); })
     .Build();
-var test = IsPalindrome("A man, a plan, a canal: Panama");
-Console.WriteLine(test);
 
-static bool IsPalindrome(string s)
+//var test = IsPalindrome("A man, a plan, a canal: Panama");
+
+var carBuilder = new CarBuilder();
+var car = carBuilder
+    .AddChassis("2024Master")
+    .AddColor("Pink")
+    .Build();
+
+//delegates
+
+Console.WriteLine($"ENG: {car.Engine}, Chassis: {car.Chassis} Color: {car.Color}");
+Console.Read();
+
+PrintEventHandler printDelegate = (string text) =>
 {
-    for (int i = 0, j = s.Length - 1; j > i;)
+    Console.WriteLine(text);
+};
+
+printDelegate("test");
+
+public class BaseEntity
+{
+    public string Name { get; set; }
+
+    //public abstract void TestMethod();
+
+    public sealed virtual void MyMethod2()
     {
-        if (!char.IsLetterOrDigit(s[i]))
-        {
-            i++;
-            continue;
-        }
-
-        if (!char.IsLetterOrDigit(s[j]))
-        {
-            j--;
-            continue;
-        }
-        
-        if (char.ToLower(s[i]) != char.ToLower(s[j]))
-        {
-            return false;
-        }
-
-        i++;
-        j--;
-        // var t = i++;
-        // var t2 = j--;
-        // Console.WriteLine($"{s[t]} - {s[t2]}");
+        Console.WriteLine("test");
     }
 
-    return true;
+    public virtual void TestMethod3()
+    {
+        Console.WriteLine("test");
+    }
+    
 }
+delegate void PrintEventHandler(string text);
 
-
+// static bool IsPalindrome(string s)
+// {
+//     for (int i = 0, j = s.Length - 1; j > i;)
+//     {
+//         if (!char.IsLetterOrDigit(s[i]))
+//         {
+//             i++;
+//             continue;
+//         }
+//
+//         if (!char.IsLetterOrDigit(s[j]))
+//         {
+//             j--;
+//             continue;
+//         }
+//         
+//         if (char.ToLower(s[i]) != char.ToLower(s[j]))
+//         {
+//             return false;
+//         }
+//
+//         i++;
+//         j--;
+//         // var t = i++;
+//         // var t2 = j--;
+//         // Console.WriteLine($"{s[t]} - {s[t2]}");
+//     }
+//
+//     return true;
+// }
+//
+//
 #region Synchronization
-
-var obj = new LockDisplay();
-var task1 = Task.Run(() => obj.DisplayNum());
-var task2 = Task.Run(() => obj.DisplayNum());
-var task3 = Task.Run(() => obj.DisplayNum());
-
-await Task.WhenAll(task1, task2, task3);
-
-public class Car : IDisposable
-{
-    private StringReader reader;
-
-    // to detect redundant calls
-    private bool disposed = false;
-
-    public Car()
-    {
-        this.reader = new StringReader("");
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!disposed)
-        {
-            if (disposing)
-            {
-                if (reader != null)
-                {
-                    this.reader.Dispose();
-                }
-            }
-
-            disposed = true;
-        }
-    }
-
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-}
-
-
-internal class LockDisplay : IDisposable
-{
-    ~LockDisplay()
-    {
-    }
-
-    private readonly SemaphoreSlim semaphore = new(1);
-
-    public void DisplayNum()
-    {
-        lock (this)
-        {
-            ComputeAsync();
-        }
-    }
-
-    private void ComputeAsync()
-    {
-        for (var i = 1; i <= 5; i++)
-        {
-            Task.Delay(100);
-            Console.WriteLine("i = {0}", i);
-        }
-    }
-
-    private void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            semaphore.Dispose();
-        }
-    }
-
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-}
+//
+// var obj = new LockDisplay();
+// var task1 = Task.Run(() => obj.DisplayNum());
+// var task2 = Task.Run(() => obj.DisplayNum());
+// var task3 = Task.Run(() => obj.DisplayNum());
+//
+// await Task.WhenAll(task1, task2, task3);
+//
+// public class Car : IDisposable
+// {
+//     private StringReader reader;
+//
+//     // to detect redundant calls
+//     private bool disposed = false;
+//
+//     public Car()
+//     {
+//         this.reader = new StringReader("");
+//     }
+//
+//     protected virtual void Dispose(bool disposing)
+//     {
+//         if (!disposed)
+//         {
+//             if (disposing)
+//             {
+//                 if (reader != null)
+//                 {
+//                     this.reader.Dispose();
+//                 }
+//             }
+//
+//             disposed = true;
+//         }
+//     }
+//
+//     public void Dispose()
+//     {
+//         Dispose(true);
+//         GC.SuppressFinalize(this);
+//     }
+// }
+//
+// internal class LockDisplay : IDisposable
+// {
+//     ~LockDisplay()
+//     {
+//     }
+//
+//     private readonly SemaphoreSlim semaphore = new(1);
+//
+//     public void DisplayNum()
+//     {
+//         lock (this)
+//         {
+//             ComputeAsync();
+//         }
+//     }
+//
+//     private void ComputeAsync()
+//     {
+//         for (var i = 1; i <= 5; i++)
+//         {
+//             Task.Delay(100);
+//             Console.WriteLine("i = {0}", i);
+//         }
+//     }
+//
+//     private void Dispose(bool disposing)
+//     {
+//         if (disposing)
+//         {
+//             semaphore.Dispose();
+//         }
+//     }
+//
+//     public void Dispose()
+//     {
+//         Dispose(true);
+//         GC.SuppressFinalize(this);
+//     }
+// }
 
 #endregion
 
@@ -178,10 +215,6 @@ internal class LockDisplay : IDisposable
 //     Console.ReadKey();
 // }
 
-public class Controller
-{
-}
-
 // public class User
 // {
 //     //runtime 
@@ -209,133 +242,6 @@ public class Controller
 //         this.const1 = 100 * number; 
 //     }
 // }
-
-public interface IUserService
-{
-}
-
-public interface IWorkable
-{
-    void Work();
-}
-
-public interface IEatable
-{
-    void Eat();
-}
-
-public interface ISleepable
-{
-    void Sleep();
-}
-
-public class Shape
-{
-    public virtual double Area() => 2.2;
-}
-
-public class HumanWorker : IWorkable, IEatable, ISleepable
-{
-    public void Work()
-    {
-        /*...*/
-    }
-
-    public void Eat()
-    {
-        /*...*/
-    }
-
-    public void Sleep()
-    {
-        /*...*/
-    }
-}
-
-public class RobotWorker : IWorkable
-{
-    public void Work()
-    {
-        /*...*/
-    }
-}
-
-public class Rectangle : Shape
-{
-    public double Width { get; set; }
-    public double Height { get; set; }
-
-    public override double Area()
-    {
-        return Width * Height;
-    }
-}
-
-public class Square : Rectangle
-{
-    public override double Area()
-    {
-        return Width * Width;
-    }
-}
-
-public interface ISavingAccount
-{
-    void CalculateInterest();
-}
-
-public class RegularSavingAccount : ISavingAccount
-{
-    public void CalculateInterest()
-    {
-        //Calculate for regular saving account
-    }
-}
-
-public class SalarySavingAccount : ISavingAccount
-{
-    public void CalculateInterest()
-    {
-        //Calculate for saving account
-    }
-}
-
-public enum AccountType
-{
-    Regular,
-    Salary
-}
-
-public abstract class Customer
-{
-    public string Name { get; set; }
-    public string Address { get; set; }
-    public decimal Amount { get; set; }
-
-    //abstract is virtual and we need to implement him
-    //  in child classes (it's like a contract)
-    public abstract decimal CalculateExtra();
-
-    //When we use the keyword "virtual" we need to implement the method
-    //and we can override in child class
-    public virtual decimal CalculateDiscount()
-    {
-        return Amount * 0.1m;
-    }
-}
-
-public class GoldCustomer : Customer
-{
-    public override decimal CalculateExtra()
-    {
-        throw new NotImplementedException();
-    }
-
-    public override decimal CalculateDiscount()
-    {
-        return base.CalculateDiscount();
-    }
-}
 
 //StrategyPattern(host);
 //ObserverPattern();
