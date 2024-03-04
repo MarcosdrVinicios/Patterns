@@ -2,20 +2,20 @@ using Patterns.ObserverPattern.Interfaces;
 
 namespace Patterns.ObserverPattern;
 
-public class Farfetcher : IObserver
+public class Reader : IObserver
 {
     private string Name { get; set; }
     
-    public Farfetcher(string name)
+    public Reader(string name)
     {
         Name = name;
     }
     
     public void Update(ISubject subject)
     {
-        if (subject is Teamlyzer teamlyzer)
+        if (subject is MicrosoftNews post)
         {
-            Console.WriteLine($"Hello {Name} fresh notice: {teamlyzer.Notice}");
+            Console.WriteLine($"Hello {Name} fresh notice: {post.Notice}");
         }
     }
 }

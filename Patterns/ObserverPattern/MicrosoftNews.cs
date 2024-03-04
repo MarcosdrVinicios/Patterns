@@ -2,13 +2,8 @@ using Patterns.ObserverPattern.Interfaces;
 
 namespace Patterns.ObserverPattern;
 
-public class Teamlyzer : ISubject
+public class MicrosoftNews : ISubject
 {
-    // public Teamlyzer(string notice)
-    // {
-    //     Notice = notice;
-    // }
-
     private readonly List<IObserver> observers = new();
     private string notice;
 
