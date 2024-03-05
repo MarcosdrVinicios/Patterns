@@ -8,6 +8,8 @@ using Patterns.FactoryMethod;
 using Patterns.FactoryMethod.ConcreteCreator;
 using Patterns.ObserverPattern;
 using Patterns.StrategyPattern;
+using Patterns.StrategyPatternV1;
+using Patterns.StrategyPatternV1.ConcreteStrategy;
 
 using var host = Host.CreateDefaultBuilder(args).ConfigureServices((_, services) => { services.AddServices(); })
     .Build();
@@ -20,6 +22,15 @@ void StrategyPattern(IHost host1)
     var exportResult = exportService.Export("json", contacts);
 
     Console.WriteLine(exportResult);
+}
+
+void StrategyPatternV1()
+{
+    var calculator = new Calculator(new AdditionStrategy());
+    Console.WriteLine(calculator.ExecuteCalculation(3, 2));
+
+    calculator.SetCalculationStrategy(new SubtractionStrategy());
+    Console.WriteLine(calculator.ExecuteCalculation(3, 2));    
 }
 
 void ObserverPattern()
@@ -50,3 +61,4 @@ void FactoryMethod()
 //StrategyPattern(host);
 //ObserverPattern();
 //FactoryMethod();
+StrategyPatternV1();
