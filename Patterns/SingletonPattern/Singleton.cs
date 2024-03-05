@@ -4,23 +4,23 @@ public sealed class Singleton
 {
     private Singleton() { }
 
-    private static Singleton instant;
+    private static Singleton instance;
     
     private static readonly object lockObject = new();
     
     public static Singleton GetInstance()
     {
-        if (instant == null)
+        if (instance == null)
         {
             lock (lockObject)
             {
-                if (instant == null)
+                if (instance == null)
                 {
-                    instant = new Singleton();
+                    instance = new Singleton();
                 }
             }
         }
 
-        return instant;
+        return instance;
     }
 }

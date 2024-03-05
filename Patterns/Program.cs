@@ -4,11 +4,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using Patterns.Configuration;
+using Patterns.FactoryMethod;
+using Patterns.FactoryMethod.ConcreteCreator;
 using Patterns.ObserverPattern;
 using Patterns.StrategyPattern;
 
 using var host = Host.CreateDefaultBuilder(args).ConfigureServices((_, services) => { services.AddServices(); })
     .Build();
+
 
 void StrategyPattern(IHost host1)
 {
@@ -32,6 +35,18 @@ void ObserverPattern()
     Console.ReadKey();
 }
 
+void FactoryMethod()
+{
+    CreateDelivery(new TruckCreator());
+    CreateDelivery(new CarCreator());
 
-StrategyPattern(host);
-ObserverPattern();
+    static void CreateDelivery(TransportCreator transportCreator)
+    {
+        Console.WriteLine("I don't know what's the concret class but " + transportCreator.Deliver());
+    }
+}
+
+
+//StrategyPattern(host);
+//ObserverPattern();
+//FactoryMethod();
